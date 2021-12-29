@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt" 
+	"github.com/atdykema/blockchain_golang/genesisTools"
 	/* "net" */
 	/* "os" */
 	"github.com/atdykema/blockchain_golang/connection"
@@ -9,6 +10,10 @@ import (
 )
 
 func main(){
-	status := connection.Bootstrap()
-	fmt.Println(status)
+	
+
+	go conn.InitListen()
+
+
+
 }
