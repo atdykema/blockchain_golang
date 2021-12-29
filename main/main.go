@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"fmt" 
+	/* "net" */
+	/* "os" */
+	"github.com/atdykema/blockchain_golang/connection"
+	
 )
 
 func main(){
-	fmt.Println("hello")
+	status := connection.Bootstrap()
+	fmt.Println(status)
 }
