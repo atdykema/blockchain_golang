@@ -1,6 +1,0 @@
-package gentools
-
-import (
-	
-)
-
