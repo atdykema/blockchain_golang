@@ -2,10 +2,26 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"time"
+	"github.com/atdykema/blockchain_golang/connection"
 )
 
 func main(){
+
+	bootstrapIP := net.IPv4(108, 26, 172, 97)
+	
+	peers := []net.IP{bootstrapIP}
+
+	go conn.StartServer("localhost", "8000")
+
+	for i := 0; i < len(peers); i++{
+
+		address := peers[i].String()
+		fmt.Println(address)
+
+	}
+	
 
 	for {
 
@@ -29,8 +45,8 @@ func handleCmd(command string) int {
 
 	switch command{
 
-	case "hello":
-		fmt.Println("hi there")
+	case "find peers":
+		//go conn.FindPeers()
 		return 0
 
 	case "exit":
