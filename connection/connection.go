@@ -38,11 +38,13 @@ func handleRequest(connection net.Conn){
 
 	buf := make([]byte, 1024)
 
-	reqLen, err := connection.Read(buf)
+	_, err := connection.Read(buf)
 	if err != nil {
-		fmt.Println("error reading: ", err.Error(), " ", reqLen)
+		fmt.Println("error reading: ", err.Error(), " ")
 		os.Exit(1)
 	}
+
+	//TODO: actions for requests
 
 	connection.Write([]byte("returning message"))
 
