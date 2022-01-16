@@ -2,74 +2,21 @@ package main
 
 import (
 	"fmt"
-	"net"
 	"time"
-	"os"
-	//"github.com/atdykema/blockchain_golang/connection"
-	"io/ioutil"
+	"github.com/atdykema/blockchain_golang/connection"
 )
 
 func main(){
 
-	bootstrapIP := net.IPv4(108, 26, 172, 97)
+	bootstrapIPs := conn.GetBootstrapIPs()
 
-	if _, err := os.Stat("/peers"); err != nil{
-		err := ioutil.WriteFile("peers.txt", []byte(bootstrapIP), 1024)
-			if err != nil {
-				fmt.Printf("Unable to write peer file: %v", err)
-				os.Exit(1)
-    	}
-	}
-	
-	peerfile, err := os.Open("/peers.txt")
-    if err != nil {
-        fmt.Printf("Unable to open file: %v", err)
-    }
+	go conn.StartServer("localhost", "8080")
 
 	
+	for i := 0; i < len(bootstrapIPs); i++{
 
-	peerfile.Close()
-
-	peers := []net.IP{bootstrapIP}
-
-	//go conn.StartServer("localhost", "8080")
-
-	for i := 0; i < len(peers); i++{
-
-
-		address := peers[i].String() + ":8080"
-
-		tcpAddr, err := net.ResolveTCPAddr("tcp", address)
-		if err != nil {
-			fmt.Println("resolve fail: ", err.Error())
-			break
-		}
-
-		conn, err := net.DialTCP("tcp", nil, tcpAddr)
-		if err != nil{
-			fmt.Println("dial fail: ", err.Error())
-			break
-		}
-
-		listOfPeers, err := conn.Write([]byte("listOfPeers"))
-		if err != nil{
-			fmt.Println("peer write to node fail: ", err.Error())
-			conn.Close()
-			break
-		}
-
-		fmt.Println(listOfPeers)
-		//TODO: add peers to node list of peers
-
-		returnMessage := make([]byte, 1024)
-
-		_, err = conn.Read(returnMessage)
-		if err != nil{
-			fmt.Println("return message send fail: ", err.Error())
-		}
-
-
-		conn.Close()
+		
+		
 
 	}
 	
