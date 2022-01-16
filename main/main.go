@@ -6,12 +6,30 @@ import (
 	"time"
 	"os"
 	//"github.com/atdykema/blockchain_golang/connection"
+	"io/ioutil"
 )
 
 func main(){
 
 	bootstrapIP := net.IPv4(108, 26, 172, 97)
+
+	if _, err := os.Stat("/peers"); err != nil{
+		err := ioutil.WriteFile("peers.txt", []byte(bootstrapIP), 1024)
+			if err != nil {
+				fmt.Printf("Unable to write peer file: %v", err)
+				os.Exit(1)
+    	}
+	}
 	
+	peerfile, err := os.Open("/peers.txt")
+    if err != nil {
+        fmt.Printf("Unable to open file: %v", err)
+    }
+
+	
+
+	peerfile.Close()
+
 	peers := []net.IP{bootstrapIP}
 
 	//go conn.StartServer("localhost", "8080")
