@@ -4,19 +4,22 @@ import (
 	"fmt"
 	"time"
 	"github.com/atdykema/blockchain_golang/connection"
+	"github.com/atdykema/blockchain_golang/configuration"
 )
 
 func main(){
 
-	bootstrapIPs := conn.GetBootstrapIPs()
+	bootstrapIPs := config.GetBootstrapIPs()
 
 	go conn.StartServer("localhost", "8080")
 
-	
 	for i := 0; i < len(bootstrapIPs); i++{
 
+		//connect to each ip
 		
-		
+		//get their peers
+
+		//cat to our peer list
 
 	}
 	
