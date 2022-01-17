@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 	"os"
-
 )
+
 
 func StartServer(address string, port string){
 
@@ -33,6 +33,41 @@ func StartServer(address string, port string){
 
 }
 
+func PeerConnect(ip net.IP) *net.TCPConn{
+
+	address := ip.String() + ":8080"
+
+		tcpAddr, err := net.ResolveTCPAddr("tcp", address)
+		if err != nil {
+			fmt.Println("resolve fail: ", err.Error())
+			os.Exit(1)
+		}
+
+		conn, err := net.DialTCP("tcp", nil, tcpAddr)
+		if err != nil{
+			fmt.Println("dial fail: ", err.Error())
+			os.Exit(1)
+		}
+
+		return conn
+}
+
+func WriteToPeer(conn *net.TCPConn, msg string, id string){
+
+	_, err := conn.Write([]byte(id))
+		if err != nil{
+			fmt.Println("peer write id to node fail: ", err.Error())
+			conn.Close()
+		}
+	
+	
+
+	_, err = conn.Write([]byte(msg))
+		if err != nil{
+			fmt.Println("peer write msg to node fail: ", err.Error())
+			conn.Close()
+		}
+}
 
 func handleRequest(connection net.Conn){
 
