@@ -1,9 +1,12 @@
 package conn
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 
@@ -52,17 +55,9 @@ func PeerConnect(ip net.IP) *net.TCPConn{
 		return conn
 }
 
-func WriteToPeer(conn *net.TCPConn, msg string, id string){
-
-	_, err := conn.Write([]byte(id))
-		if err != nil{
-			fmt.Println("peer write id to node fail: ", err.Error())
-			conn.Close()
-		}
+func WriteToPeer(conn *net.TCPConn, msg string){
 	
-	
-
-	_, err = conn.Write([]byte(msg))
+	_, err := conn.Write([]byte(msg))
 		if err != nil{
 			fmt.Println("peer write msg to node fail: ", err.Error())
 			conn.Close()
@@ -71,17 +66,53 @@ func WriteToPeer(conn *net.TCPConn, msg string, id string){
 
 func handleRequest(connection net.Conn){
 
-	buf := make([]byte, 1024)
+	for{
 
-	_, err := connection.Read(buf)
-	if err != nil {
-		fmt.Println("error reading: ", err.Error(), " ")
-		os.Exit(1)
+		unformattedData, err := bufio.NewReader(connection).ReadString('\n')
+		if err != nil {
+			fmt.Println("error reading: ", err.Error(), " ")
+			os.Exit(1)
+		}
+
+		data := strings.TrimSpace(string(unformattedData))
+
+		//TODO: actions for requests
+		
+		if data == "end"{
+			break
+		}else{
+			if data == "REQ_PEERS"{
+
+				wd, err:= os.Getwd()
+				if err != nil{
+					fmt.Println("error getting wd: ", err.Error())
+				}
+
+				parentDir := filepath.Dir(wd)
+				fmt.Println(parentDir)//test
+
+				peers, err := os.Open(filepath.Join(parentDir, "peers.txt"))
+				if err != nil {
+					fmt.Printf("Unable to open file: %v\n", err)
+					return
+				}
+
+				defer peers.Close()
+
+				pscanner := bufio.NewScanner(peers)
+
+				for pscanner.Scan(){
+					_, err := connection.Write([]byte(pscanner.Text()))
+					if err != nil{
+						fmt.Println("unable to write file:", err.Error())
+						return
+					}
+				}
+			}
+		}
 	}
 
-	//TODO: actions for requests
-
-	connection.Write([]byte("returning message"))
+	connection.Write([]byte("end"))
 
 	connection.Close()
 }

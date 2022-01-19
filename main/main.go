@@ -16,10 +16,13 @@ func main(){
 	for i := 0; i < len(bootstrapIPs); i++{
 
 		//connect to each ip
+		connect := conn.PeerConnect(bootstrapIPs[i])
 		
 		//get their peers
+		conn.WriteToPeer(connect, "REQ_PEERS")
 
 		//cat to our peer list
+		
 
 	}
 	
